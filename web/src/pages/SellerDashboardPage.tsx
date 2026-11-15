@@ -536,19 +536,25 @@ export const SellerDashboardPage: React.FC = () => {
                   return (
                     <tr key={prod._id} className="hover:bg-slate-50 transition">
                       <td className="py-3 px-3">
-                        <div className="flex items-center gap-3">
+                        <Link
+                          to={`/products/${prod._id}`}
+                          className="flex items-center gap-3 group/prod cursor-pointer"
+                          title="Click to view product detail page"
+                        >
                           <img
                             src={prod.images?.[0] || coverImage}
                             alt=""
-                            className="w-12 h-12 object-cover rounded-xl bg-slate-100 flex-shrink-0 border border-slate-200"
+                            className="w-12 h-12 object-cover rounded-xl bg-slate-100 flex-shrink-0 border border-slate-200 group-hover/prod:scale-105 transition"
                           />
                           <div className="min-w-0">
-                            <p className="font-bold text-slate-900 truncate max-w-xs">{prod.name}</p>
+                            <p className="font-bold text-slate-900 truncate max-w-xs group-hover/prod:text-emerald-700 transition">
+                              {prod.name}
+                            </p>
                             <span className="text-[10px] text-slate-400 line-clamp-1">
                               {prod.images?.length > 1 ? `${prod.images.length} photos` : '1 photo'} • {prod.description}
                             </span>
                           </div>
-                        </div>
+                        </Link>
                       </td>
 
                       <td className="py-3 px-3 text-slate-600 font-medium">
@@ -596,53 +602,34 @@ export const SellerDashboardPage: React.FC = () => {
                         </div>
                       </td>
 
-                      {/* Visibility Status Badge */}
+                      {/* Visibility Toggle Button */}
                       <td className="py-3 px-3">
-                        <span
-                          className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                        <button
+                          type="button"
+                          onClick={() => handleToggleVisibility(prod._id, isVisible, prod.name)}
+                          disabled={updatingId === prod._id}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold transition shadow-xs disabled:opacity-50 ${
                             isVisible
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : 'bg-amber-100 text-amber-800'
+                              ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
+                              : 'bg-amber-100 text-amber-800 hover:bg-amber-200'
                           }`}
+                          title={isVisible ? 'Click to hide product from buyers' : 'Click to publish product to marketplace'}
                         >
-                          {isVisible ? 'Visible in Store' : 'Hidden (Draft)'}
-                        </span>
+                          <span className={`w-1.5 h-1.5 rounded-full ${isVisible ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                          {isVisible ? 'Visible (Click to Hide)' : 'Hidden (Click to Publish)'}
+                        </button>
                       </td>
 
-                      {/* Actions: Hide/Unhide, View, Delete */}
+                      {/* Actions: Delete */}
                       <td className="py-3 px-3 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
-                          {/* Hide / Unhide Toggle */}
-                          <button
-                            onClick={() => handleToggleVisibility(prod._id, isVisible, prod.name)}
-                            disabled={updatingId === prod._id}
-                            className={`p-1.5 rounded-lg transition ${
-                              isVisible
-                                ? 'text-amber-600 hover:bg-amber-50'
-                                : 'text-emerald-600 hover:bg-emerald-50'
-                            }`}
-                            title={isVisible ? 'Hide product from marketplace' : 'Unhide / Publish to marketplace'}
-                          >
-                            {isVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                          </button>
-
-                          <Link
-                            to={`/products/${prod._id}`}
-                            className="p-1.5 text-slate-400 hover:text-emerald-600 transition"
-                            title="Preview product page"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </Link>
-
-                          <button
-                            onClick={() => handleDeleteProduct(prod._id, prod.name)}
-                            disabled={updatingId === prod._id}
-                            className="p-1.5 text-slate-400 hover:text-rose-600 transition disabled:opacity-50"
-                            title="Delete / Deactivate product"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
+                        <button
+                          onClick={() => handleDeleteProduct(prod._id, prod.name)}
+                          disabled={updatingId === prod._id}
+                          className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition disabled:opacity-50"
+                          title="Delete / Deactivate product"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </td>
                     </tr>
                   );

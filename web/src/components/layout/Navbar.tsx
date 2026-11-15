@@ -161,9 +161,11 @@ export const Navbar: React.FC = () => {
           <nav className="hidden lg:flex items-center space-x-6 text-sm font-medium text-slate-600">
             <Link to="/" className="hover:text-emerald-600 transition">{t('nav.home')}</Link>
             <Link to="/products" className="hover:text-emerald-600 transition">{t('nav.catalog')}</Link>
-            <Link to="/delivery" className="hover:text-emerald-600 transition flex items-center gap-1 text-slate-600">
-              <Truck className="w-4 h-4 text-emerald-600" /> Driver Run Sheet
-            </Link>
+            {user?.role === 'driver' && (
+              <Link to="/delivery" className="hover:text-emerald-600 transition flex items-center gap-1 text-emerald-700 font-semibold">
+                <Truck className="w-4 h-4 text-emerald-600" /> Driver Run Sheet
+              </Link>
+            )}
             {user?.role === 'seller' && (
               <Link to="/seller" className="hover:text-emerald-600 transition flex items-center gap-1 text-emerald-700 font-semibold">
                 <Store className="w-4 h-4" /> {t('nav.seller_dashboard')}

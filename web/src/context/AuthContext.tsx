@@ -5,7 +5,7 @@ interface User {
   id: string;
   name: string;
   email: string;
-  role: 'buyer' | 'seller' | 'admin';
+  role: 'buyer' | 'seller' | 'admin' | 'driver';
   totpEnabled: boolean;
 }
 
@@ -13,7 +13,7 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   login: (email: string, pass: string) => Promise<void>;
-  demoLogin: (role: 'buyer' | 'seller' | 'admin') => Promise<void>;
+  demoLogin: (role: 'buyer' | 'seller' | 'admin' | 'driver') => Promise<void>;
   register: (name: string, email: string, pass: string, role?: string) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
@@ -88,7 +88,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const demoLogin = async (role: 'buyer' | 'seller' | 'admin') => {
+  const demoLogin = async (role: 'buyer' | 'seller' | 'admin' | 'driver') => {
     const data = await apiFetch('/auth/demo-login', {
       method: 'POST',
       body: JSON.stringify({ role }),

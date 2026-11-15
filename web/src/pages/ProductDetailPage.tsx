@@ -58,13 +58,37 @@ export const ProductDetailPage: React.FC = () => {
     apiFetch(`/products/${id}`)
       .then((data) => {
         if (data && data._id) {
-          setProduct(data);
-          setActiveImage(data.images?.[0] || '');
+          // Check if there is a matching authentic sample product by ID or title
+          const matched =
+            foundSample ||
+            ETHIOPIAN_SAMPLE_PRODUCTS.find(
+              (p) =>
+                p._id === id ||
+                (data.name && p.name.toLowerCase().includes(data.name.toLowerCase().slice(0, 15))) ||
+                (data.name && data.name.toLowerCase().includes(p.name.toLowerCase().slice(0, 15)))
+            );
+
+          // Use rich multi-angle authentic photos
+          const resolvedImages =
+            Array.isArray(data.images) && data.images.length > 1
+              ? data.images.filter(Boolean)
+              : matched?.images && matched.images.length > 0
+              ? matched.images
+              : Array.isArray(data.images) && data.images.length > 0
+              ? data.images
+              : ['https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&auto=format&fit=crop&q=80'];
+
+          setProduct({
+            ...data,
+            images: resolvedImages,
+          });
+          setActiveImage(resolvedImages[0]);
+
           if (Array.isArray(data.relatedProducts) && data.relatedProducts.length > 0) {
             setRelatedProducts(data.relatedProducts);
-          } else if (!foundSample) {
-            const fallbackRelated = ETHIOPIAN_SAMPLE_PRODUCTS.filter((p) => p._id !== data._id).slice(0, 4);
-            setRelatedProducts(fallbackRelated);
+          } else if (matched) {
+            const fallbackRelated = ETHIOPIAN_SAMPLE_PRODUCTS.filter((p) => p._id !== matched._id && p.category === matched.category).slice(0, 4);
+            setRelatedProducts(fallbackRelated.length > 0 ? fallbackRelated : ETHIOPIAN_SAMPLE_PRODUCTS.slice(0, 4));
           }
         }
       })

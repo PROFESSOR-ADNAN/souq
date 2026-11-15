@@ -176,12 +176,20 @@ export const deleteUserAccount = async (userId: string): Promise<void> => {
 };
 
 export const demoLogin = async (requestedRole?: string): Promise<{ user: IUser; tokens: AuthTokens }> => {
-  const role = requestedRole === ROLES.ADMIN ? ROLES.ADMIN : requestedRole === ROLES.SELLER ? ROLES.SELLER : ROLES.BUYER;
+  const role =
+    requestedRole === ROLES.ADMIN
+      ? ROLES.ADMIN
+      : requestedRole === ROLES.SELLER
+      ? ROLES.SELLER
+      : requestedRole === ROLES.DRIVER
+      ? ROLES.DRIVER
+      : ROLES.BUYER;
   
   const emailMap: Record<string, { email: string; name: string }> = {
     [ROLES.BUYER]: { email: 'demo.buyer@souq.test', name: 'Demo Buyer (Addis)' },
     [ROLES.SELLER]: { email: 'demo.seller@souq.test', name: 'Bole Artisan Crafts' },
     [ROLES.ADMIN]: { email: 'admin@souq.test', name: 'SOUQ Platform Admin' },
+    [ROLES.DRIVER]: { email: 'demo.driver@souq.test', name: 'Addis Courier Unit #04' },
   };
 
   const target = emailMap[role] || emailMap[ROLES.BUYER];

@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext.js';
 import { Sparkles, User, Store, ShieldCheck, Check, Truck } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export const DemoSwitcher: React.FC = () => {
   const { user, demoLogin } = useAuth();
   const [loadingRole, setLoadingRole] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  const handleSwitch = async (role: 'buyer' | 'seller' | 'admin') => {
+  const handleSwitch = async (role: 'buyer' | 'seller' | 'admin' | 'driver') => {
     setLoadingRole(role);
     try {
       await demoLogin(role);
+      if (role === 'driver') {
+        navigate('/delivery');
+      } else if (role === 'seller') {
+        navigate('/seller');
+      } else if (role === 'admin') {
+        navigate('/admin');
+      }
     } catch (err) {
       console.error('Demo login failed:', err);
     } finally {
@@ -73,14 +81,20 @@ export const DemoSwitcher: React.FC = () => {
             {user?.role === 'admin' && <Check className="w-3 h-3 text-indigo-200" />}
           </button>
 
-          <Link
-            to="/delivery"
-            className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition font-medium"
-            title="View Driver Delivery Run Sheet"
+          <button
+            onClick={() => handleSwitch('driver')}
+            disabled={loadingRole !== null}
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-md transition font-medium ${
+              user?.role === 'driver'
+                ? 'bg-emerald-600 text-white shadow-sm'
+                : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+            }`}
+            title="Switch to Demo Driver / Courier persona"
           >
             <Truck className="w-3 h-3 text-emerald-400" />
-            <span>Driver Portal</span>
-          </Link>
+            <span>Driver</span>
+            {user?.role === 'driver' && <Check className="w-3 h-3 text-emerald-200" />}
+          </button>
         </div>
       </div>
     </div>

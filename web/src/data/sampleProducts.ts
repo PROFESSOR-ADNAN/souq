@@ -265,9 +265,10 @@ export const ETHIOPIAN_SAMPLE_PRODUCTS: ProductItem[] = [
     price: 320000, // 3,200.00 ETB
     category: 'Food & Honey',
     images: [
-      'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=800&auto=format&fit=crop&q=80',
       'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=800&auto=format&fit=crop&q=80',
       'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=800&auto=format&fit=crop&q=80',
     ],
     stock: 40,
     seller: {
